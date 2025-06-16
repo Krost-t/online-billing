@@ -1,14 +1,21 @@
 # Application SaaS de Facturation 🚀
 
+**Projet développé intégralement en [Symfony](https://symfony.com/) et réalisé en collaboration avec [Nashouille](https://github.com/Nashouille).**
+
+---
+
 ## 💡 Description du projet
 
 Cette application SaaS de facturation en ligne permet de gérer l’ensemble du cycle financier d’une entreprise :
-- **Factures de vente et d’achat**
-- **Gestion des notes de frais**
-- **Génération de bilans comptables**
-- **Visualisation des indicateurs financiers** (marges, dépenses, chiffre d’affaires)
 
-Le front-end est développé en **React**, le back-end en **Java (Spring Boot)** ou **Node.js (Express/NestJS)**, et la persistance via **PostgreSQL** ou **MongoDB**.
+* **Factures de vente et d’achat**
+* **Gestion des notes de frais**
+* **Génération de bilans comptables**
+* **Visualisation des indicateurs financiers** (marges, dépenses, chiffre d’affaires)
+
+L’interface utilisateur est réalisée en **Symfony/Twig** avec du **CSS** (ou **Bootstrap**), le back‑end est en **PHP avec Symfony**, et la persistance des données se fait via **MySQL** (Docker).
+
+> 🎨 Le design de l’application est disponible sur Figma : [https://www.figma.com/design/F6bJb0OZjGC8lwEsVoPHQT/Projet-DWWM?node-id=42-1034\&t=MxPGAKHABKh2UVAf-1](https://www.figma.com/design/F6bJb0OZjGC8lwEsVoPHQT/Projet-DWWM?node-id=42-1034&t=MxPGAKHABKh2UVAf-1)
 
 ---
 
@@ -18,12 +25,12 @@ Le front-end est développé en **React**, le back-end en **Java (Spring Boot)**
   - [💡 Description du projet](#-description-du-projet)
   - [📑 Table des matières](#-table-des-matières)
   - [✨ Fonctionnalités](#-fonctionnalités)
-  - [🏗️ Architecture et Design](#️-architecture-et-design)
-    - [1. 🖥️ Front‑end](#1-️-frontend)
-    - [2. ⚙️ Back‑end](#2-️-backend)
-    - [3. 🗄️ Base de données](#3-️-base-de-données)
-    - [4. ☁️ Déploiement](#4-️-déploiement)
-    - [5. 🧪 Tests \& Maintenance](#5--tests--maintenance)
+  - [🏗️ Architecture et design](#️-architecture-et-design)
+    - [1. Front‑end](#1-frontend)
+    - [2. Back‑end Back‑end](#2-backend-backend)
+    - [3. Base de données](#3-base-de-données)
+    - [4. Déploiement Déploiement](#4-déploiement-déploiement)
+    - [5. Tests \& maintenance](#5-tests--maintenance)
   - [🔄 État d’avancement](#-état-davancement)
     - [Objectifs de maîtrise](#objectifs-de-maîtrise)
   - [📥 Installation](#-installation)
@@ -36,152 +43,159 @@ Le front-end est développé en **React**, le back-end en **Java (Spring Boot)**
 
 ## ✨ Fonctionnalités
 
-- 👤 **Gestion des utilisateurs** : inscription, authentification (JWT/OAuth), gestion des rôles
-- 🧑‍💼 **Clients** : CRUD complet
-- 🧾 **Factures** : création, édition, suppression (ventes & achats), PDF export
-- 💸 **Notes de frais** : saisie, validation, remboursement, suivi
-- 💳 **Paiement en ligne** : intégration Stripe & PayPal
-- 📑 **Bilan comptable** : génération de bilans et comptes de résultat
-- 📊 **Tableau de bord** : graphiques interactifs (marges, CA, dépenses)
-- 📧 **Emails automatisés** : envoi de documents financiers
+* 👤 **Gestion des utilisateurs** : inscription, authentification (JWT/OAuth), gestion des rôles
+* 🧑‍💼 **Clients** : CRUD complet
+* 🧾 **Factures** : création, édition, suppression (ventes & achats), export PDF
+* 💸 **Notes de frais** : saisie, validation, remboursement, suivi
+* 💳 **Paiement en ligne** : intégration Stripe & PayPal
+* 📑 **Bilan comptable** : génération de bilans et comptes de résultat
+* 📊 **Tableau de bord** : graphiques interactifs (marges, CA, dépenses)
+* 📧 **Emails automatisés** : envoi de documents financiers
 
 ---
 
-## 🏗️ Architecture et Design
+## 🏗️ Architecture et design
 
-Chaque volet du projet suit une phase de conception formalisée et des points clés à valider.
+Chaque volet du projet suit une phase de conception formalisée avec des points clés à valider.
 
-### 1. 🖥️ Front‑end
+### 1. Front‑end
 
-**Description** : interface React gérant la navigation, la saisie et l’affichage des données financières.
+**Technologies** : Symfony/Twig, CSS natif ou Bootstrap
 
-**Étapes de conception** :
+**Étapes** :
+
 1. Recueil des besoins UX/UI et définition des personas.
-2. Création de wireframes et prototypes interactifs (Figma).
-3. Sélection des bibliothèques UI et de routage.
+2. Conception des maquettes et prototypes sur Figma.
+3. Intégration du design via Twig et Bootstrap.
 
 **Points clés** :
-- **Routage** : React Router (large écosystème) ou TanStack Router (typage, loaders).  
-- **Gestion d’état** : Context API pour la simplicité ou Redux pour la scalabilité.  
-- **Styling** : Tailwind CSS pour utilitaire-first ou Material‑UI pour composants préconçus.
 
-### 2. ⚙️ Back‑end
+* **Templating** : Symfony Twig.
+* **Styling** : CSS sur mesure ou Bootstrap.
+* **Asset Management** : Webpack Encore ou AssetMapper.
 
-**Description** : API REST sécurisée, services métiers et orchestration des processus asynchrones.
+### 2. Back‑end Back‑end
 
-**Étapes de conception** :
-1. Définition des cas d’usage et flux métiers.
-2. Modélisation des domaines et services (auth, facturation, paiements, PDF).
-3. Rédaction des spécifications OpenAPI/Swagger.
+**Technologies** : PHP 8+, Symfony 6, API Platform, Messenger
 
-**Points clés** :
-- **Authentification** : JWT ou OAuth 2.0 via Spring Security ou Passport.js.  
-- **Architecture** : monolithique (Spring Boot) ou microservices (NestJS).  
-- **Asynchronicité** : RabbitMQ ou AWS SQS pour la génération de PDF et l’envoi d’emails.
+**Étapes** :
 
-### 3. 🗄️ Base de données
-
-**Description** : stockage fiable des entités et optimisation des requêtes.
-
-**Étapes de conception** :
-1. Conception du schéma relationnel (ERD) ou document (collections).  
-2. Choix du SGBD selon besoins de cohérence vs flexibilité.  
-3. Mise en place de la stratégie de sauvegarde et sécurité.
+1. Définition des cas d’usage et modélisation des entités.
+2. Création des services métiers (authentification, facturation, paiements, PDF).
+3. Documentation de l’API via OpenAPI/Swagger.
 
 **Points clés** :
-- **Migrations** : Flyway/Liquibase ou Mongoose migrations.  
-- **Indexation** : champs de recherche et tri (date, client, statut).  
-- **Chiffrement** : protection des données sensibles (tokens, coordonnées bancaires).
 
-### 4. ☁️ Déploiement
+* **Authentification** : JWT (lexik/jwt-authentication) ou OAuth2 (Symfony Security).
+* **Architecture** : monolithe modulable ou microservices via Symfony Messenger.
+* **Traitements asynchrones** : Messenger avec RabbitMQ ou Amazon SQS.
 
-**Description** : automatisation, scalabilité et observabilité de l’infrastructure.
+### 3. Base de données
 
-**Étapes de conception** :
-1. Écriture des Dockerfiles pour chaque service.
-2. Définition de l’orchestration (Docker Compose vs Kubernetes + Helm).
-3. Conception du pipeline CI/CD.
+**Technologies** : MySQL, Doctrine ORM
+
+**Étapes** :
+
+1. Conception du schéma relationnel (ERD).
+2. Choix des types de données et normalisation.
+3. Mise en place de la stratégie de sauvegarde et de sécurité via Docker.
 
 **Points clés** :
-- **CI/CD** : GitHub Actions ou GitLab CI pour build, tests et déploiement.  
-- **Infra as Code** : Terraform pour provisionner les ressources.  
-- **Scalabilité** : configurations Helm / autoscaling Kubernetes.
 
-### 5. 🧪 Tests & Maintenance
+* **Migrations** : Doctrine Migrations.
+* **Indexation** : champs de recherche et tris fréquents (date, client, statut).
+* **Chiffrement** : protection des données sensibles.
 
-**Description** : garantir la qualité et la fiabilité en production.
+### 4. Déploiement Déploiement
 
-**Étapes de conception** :
-1. Définition de la stratégie de tests (unitaires, intégration, e2e).  
-2. Plan de monitoring et gestion des logs.  
+**Technologies** : Docker, Docker Compose, Kubernetes, Helm, Terraform
+
+**Étapes** :
+
+1. Rédaction des Dockerfiles pour chaque service.
+2. Choix de l’orchestration (Compose vs Kubernetes + Helm).
+3. Configuration du pipeline CI/CD.
+
+**Points clés** :
+
+* **CI/CD** : GitHub Actions ou GitLab CI.
+* **Infrastructure as Code** : Terraform.
+* **Scalabilité** : autoscaling Kubernetes.
+
+### 5. Tests & maintenance
+
+**Technologies** : PHPUnit, Behat, Cypress, Prometheus, Grafana, ELK Stack
+
+**Étapes** :
+
+1. Définition de la stratégie de tests (unitaires, intégration, e2e).
+2. Mise en place du monitoring et de la collecte de logs.
 3. Politique de sauvegarde et restauration.
 
 **Points clés** :
-- **Tests** : Jest, JUnit, Mocha, Supertest, Cypress.  
-- **Monitoring** : Prometheus + Grafana ou Datadog.  
-- **Logs** : ELK Stack (Elasticsearch, Logstash, Kibana).  
-- **Backups** : dumps PostgreSQL ou snapshots MongoDB automatisés.
+
+* **Tests** : PHPUnit, Behat, Cypress.
+* **Monitoring** : Prometheus + Grafana.
+* **Logs** : ELK (Elasticsearch, Logstash, Kibana).
+* **Backups** : automatisation des dumps PostgreSQL.
 
 ---
 
 ## 🔄 État d’avancement
 
-Cette section présente les compétences et éléments critiques à maîtriser avant de lancer le développement du projet.
+Cette section présente les compétences et éléments critiques à maîtriser avant de démarrer le développement.
 
 ### Objectifs de maîtrise
 
-- **Compréhension fonctionnelle** : se familiariser avec les workflows de facturation (ventes/achats), notes de frais et bilans.  
-- **Front‑end React** : maîtriser React Router ou TanStack Router, Context API ou Redux, et l’utilisation de Tailwind CSS/Material‑UI.  
-- **Back‑end et API** : comprendre la configuration de Spring Boot ou NestJS, la sécurisation JWT/OAuth, et la spécification OpenAPI.  
-- **Modélisation de données** : savoir concevoir un schéma relationnel ou document adapté (ERD, collections).  
-- **Génération de documents** : appréhender PDFKit/iText ou Puppeteer pour l’export PDF.  
-- **Intégrations tierces** : configuration des SDK Stripe & PayPal, et mise en place de workflows asynchrones (RabbitMQ/SQS).  
-- **CI/CD et déploiement** : création de pipelines GitHub Actions/GitLab CI, Docker et Terraform/Helm.  
-- **Tests et monitoring** : définir des suites de tests (unitaires, intégration, e2e) et configurer Prometheus/Grafana ou Datadog pour la surveillance.
+* Workflow de facturation (ventes/achats), notes de frais et bilans.
+* Maîtrise de React (router, gestion d’état, styling).
+* Utilisation de Symfony (entités, contrôleurs, sécurité, Messenger).
+* Conception de schéma de données relationnel.
+* Génération de PDF (FPDI/TCPDF ou Dompdf).
+* Intégration de Stripe et PayPal.
+* Pipeline CI/CD et déploiement Docker/Kubernetes.
+* Configuration de tests et monitoring.
 
 ---
 
 ## 📥 Installation
 
-1. **Cloner le dépôt**  
-   ```bash
-   git clone https://github.com/votre-org/facturation-saas.git
-   cd facturation-saas
-   ```
-2. **Installer les dépendances**  
-   ```bash
-   cd backend && npm install # ou mvnw clean install
-   cd ../frontend && npm install
-   ```
-3. **Démarrer la base de données**  
-   ```bash
-   docker-compose up -d
-   ```
+```bash
+# Cloner le dépôt
+git clone https://github.com/votre-org/facturation-saas.git
+cd facturation-saas
+
+# Installer les dépendances back‑end
+cd backend
+composer install
+
+# Lancer Docker (MySQL et services)
+docker-compose up -d
+```
 
 ## ⚙️ Configuration
 
-Copiez les fichiers d’exemple et renseignez vos clés et URL :
-- `backend/.env`  
-- `frontend/.env`
+Dupliquez le fichier d’exemple et renseignez vos paramètres :
+
+* `backend/.env.local`
 
 ## ▶️ Lancement
 
 ```bash
-# Back‑end
-cd backend && npm run start:dev  # ou ./mvnw spring-boot:run
-# Front‑end
-cd frontend && npm start
+# Démarrer le serveur Symfony
+cd backend
+symfony server:start
 ```
 
 ## 🤝 Contribuer
 
-1. Forkez le projet  
-2. Créez une branche feature (`git checkout -b feature/une-fonctionnalité`)  
-3. Validez vos changements (`git commit -m "feat: votre message"`)  
-4. Ouvrez une Pull Request
+1. Forkez le projet.
+2. Créez une branche feature (`git checkout -b feature/ma-fonctionnalité`).
+3. Commitez vos changements (`git commit -m "feat: description"`).
+4. Ouvrez une Pull Request.
 
 ---
 
 ## 📝 Licence
 
-Ce projet est distribué sous la licence MIT. Voir le fichier [LICENSE](LICENSE) pour les détails.
+Ce projet est distribué sous la licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
