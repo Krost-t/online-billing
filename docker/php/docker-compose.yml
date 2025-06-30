@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  php:
+    build:
+      context: ../../
+      dockerfile: docker/php/Dockerfile
+    volumes:
+      - ../../:/var/www/html:cached
+    working_dir: /var/www/html
+    networks:
+      - symfony-network
+
+  nginx:
+    image: nginx:stable
+    ports:
+      - "8080:80"
+    volumes:
+      - ../../:/var/www/html:cached
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php
+    networks:
+      - symfony-network
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: billing
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - symfony-network
+
+volumes:
+  db_data:
+
+networks:
+  symfony-network:
+    driver: bridge
