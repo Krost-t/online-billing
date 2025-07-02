@@ -1,0 +1,15 @@
+{% extends 'minimal.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+    <form method="post">
+        <label for="username">Nom d'utilisateur</label>
+        <input type="text" name="_username" id="username">
+
+        <label for="password">Mot de passe</label>
+        <input type="password" name="_password" id="password">
+
+        <button type="submit">Se connecter</button>
+    </form>
+{% endblock %}
