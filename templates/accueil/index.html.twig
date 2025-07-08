@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'accueil.html.twig' %}
 
 
  {% block stylesheets %}
@@ -8,32 +8,9 @@
 {% block title %}Accueil
 {% endblock %}
 
-
 {% block body %}
 
-	<header>
-		<div class="logo-place">
-			<a href="{{ path('app_accueil') }}" title="Accueil">
-				<img src="{{ asset('images/logo.png') }}" alt="Logo"/>
-			</a>
-		</div>
-		<i class="bi bi-list"></i>
-		<nav class="nav-place">
-			<ul>
-				<li><a href="{{ path('app_register') }}">Inscription</a></li>
-				<li><a href="{{ path('app_login') }}">Connexion</a></li>
-			</ul>
-		</nav>
-	</header>
-
-		<nav class="nav-place-mobile">
-		<i class="bi bi-x-lg"></i>
-			<ul>
-				<li><a href="{{ path('app_register') }}">Inscription</a></li>
-				<li><a href="{{ path('app_login') }}">Connexion</a></li>
-			</ul>
-		</nav>
-
+	
 	<main>
 		<article class="welcome-article">
 			<div>
