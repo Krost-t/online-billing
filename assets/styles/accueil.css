@@ -1,0 +1,131 @@
+header {
+    justify-content: space-between;
+    margin-bottom: 35px;
+}
+
+.logo-accueil {
+    height: 100px;
+    width: 100px;
+    background-color: rebeccapurple;
+    object-fit: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.bi-list {
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+
+.nav-place {
+    display: none;
+}
+
+.nav-place-mobile {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #252525;
+    color: #FFFFFF;
+    z-index: 999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-place-mobile .bi-x-lg {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.nav-place-mobile .bi-house {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+}
+
+.nav-place-mobile ul {
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+}
+
+.nav-place-mobile ul li {
+    height: 150px;
+    width: 500px;
+    border-radius: 30px;
+    padding: 0 20px;
+    font-size: 5rem;
+    display: grid;
+    place-items: center;
+    background-color: #F9B233;
+}
+
+.nav-place-mobile {
+    display: none;
+}
+
+
+main {
+    min-height: 100vh;
+    background-color: #FFFFFF;
+}
+
+footer {
+
+    height: 90px;
+    width: 100%;
+    background-color: #252525;
+    color: #F9B233;
+    display: grid;
+    place-items: center;
+    position: absolute;
+    bottom: 0;
+}
+
+@media (min-width: 1024px) {
+
+    .bi-list {
+        display: none;
+    }
+
+
+
+    .nav-place-mobile {
+        display: none;
+    }
+
+    .nav-place {
+        height: 45px;
+        width: 500px;
+        display: block;
+
+    }
+        .nav-place ul {
+            height: 100%;
+            display: flex; 
+            justify-content: space-around;
+            align-items: center;
+        }
+    .nav-place ul li {
+        height: 100%;
+        width: 150px;
+        font-size: 1.5rem;
+        color: #FFFFFF;
+        background-color: #F9B233;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
