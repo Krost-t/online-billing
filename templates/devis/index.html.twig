@@ -1,41 +1,50 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Devis index{% endblock %}
+{% block title %}Liste des devis{% endblock %}
 
 {% block body %}
-    <h1>Devis index</h1>
+    <h1>Liste des devis</h1>
+
+    {% if app.user %}
+        <p>Connecté en tant que : <strong>{{ app.user.userIdentifier }}</strong></p>
+        {% if 'ROLE_ADMIN' in app.user.roles %}
+            <p><em>Vous êtes administrateur et voyez tous les devis.</em></p>
+        {% else %}
+            <p><em>Vous voyez uniquement vos devis.</em></p>
+        {% endif %}
+    {% endif %}
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>ClientNom</th>
-                <th>ClientEmail</th>
-                <th>CreatedAt</th>
+                <th>Nom du client</th>
+                <th>Email du client</th>
+                <th>Date de création</th>
                 <th>Statut</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for devi in devis %}
-            <tr>
-                <td>{{ devi.id }}</td>
-                <td>{{ devi.clientNom }}</td>
-                <td>{{ devi.clientEmail }}</td>
-                <td>{{ devi.createdAt ? devi.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ devi.statut }}</td>
-                <td>
-                    <a href="{{ path('app_devis_show', {'id': devi.id}) }}">show</a>
-                    <a href="{{ path('app_devis_edit', {'id': devi.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
+            {% for devi in devis %}
+                <tr>
+                    <td>{{ devi.id }}</td>
+                    <td>{{ devi.clientNom }}</td>
+                    <td>{{ devi.clientEmail }}</td>
+                    <td>{{ devi.createdAt ? devi.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ devi.statut }}</td>
+                    <td>
+                        <a href="{{ path('app_devis_show', {id: devi.id}) }}">Voir</a>
+                        <a href="{{ path('app_devis_edit', {id: devi.id}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">Aucun devis trouvé.</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_devis_new') }}">Create new</a>
+    <a href="{{ path('app_devis_new') }}" class="btn btn-primary">Créer un nouveau devis</a>
 {% endblock %}

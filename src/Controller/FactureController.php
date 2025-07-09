@@ -17,8 +17,18 @@ final class FactureController extends AbstractController
     #[Route(name: 'app_facture_index', methods: ['GET'])]
     public function index(FactureRepository $factureRepository): Response
     {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $factures = in_array('ROLE_ADMIN', $user->getRoles(), true)
+            ? $factureRepository->findAll()
+            : $factureRepository->findBy(['user' => $user]);
+
         return $this->render('facture/index.html.twig', [
-            'factures' => $factureRepository->findAll(),
+            'factures' => $factures,
         ]);
     }
 
@@ -26,6 +36,13 @@ final class FactureController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $facture = new Facture();
+        $facture->setUser($this->getUser());
+
+        // Ajout automatique des dates
+        $now = new \DateTimeImmutable();
+        $facture->setCreatedAt($now);
+        $facture->setDateEmission($now);
+
         $form = $this->createForm(FactureType::class, $facture);
         $form->handleRequest($request);
 
@@ -71,7 +88,7 @@ final class FactureController extends AbstractController
     #[Route('/{id}', name: 'app_facture_delete', methods: ['POST'])]
     public function delete(Request $request, Facture $facture, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$facture->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $facture->getId(), $request->request->get('_token'))) {
             $entityManager->remove($facture);
             $entityManager->flush();
         }

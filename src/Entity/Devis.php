@@ -30,12 +30,13 @@ class Devis
     /**
      * @var Collection<int, LigneDevis>
      */
-    #[ORM\OneToMany(targetEntity: LigneDevis::class, mappedBy: 'devis')]
-    private Collection $devis;
+    #[ORM\OneToMany(targetEntity: LigneDevis::class, mappedBy: 'devis', cascade:["persist", "remove"], orphanRemoval: true)]
+    private Collection $lignes;
 
     public function __construct()
     {
-        $this->devis = new ArrayCollection();
+        $this->lignes = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();  // Initialisation automatique
     }
 
     public function getId(): ?int
@@ -51,7 +52,6 @@ class Devis
     public function setClientNom(string $clientNom): static
     {
         $this->clientNom = $clientNom;
-
         return $this;
     }
 
@@ -63,7 +63,6 @@ class Devis
     public function setClientEmail(?string $clientEmail): static
     {
         $this->clientEmail = $clientEmail;
-
         return $this;
     }
 
@@ -75,7 +74,6 @@ class Devis
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
@@ -87,37 +85,33 @@ class Devis
     public function setStatut(string $statut): static
     {
         $this->statut = $statut;
-
         return $this;
     }
 
     /**
      * @return Collection<int, LigneDevis>
      */
-    public function getDevis(): Collection
+    public function getLignes(): Collection
     {
-        return $this->devis;
+        return $this->lignes;
     }
 
-    public function addDevi(LigneDevis $devi): static
+    public function addLigne(LigneDevis $ligne): static
     {
-        if (!$this->devis->contains($devi)) {
-            $this->devis->add($devi);
-            $devi->setDevis($this);
+        if (!$this->lignes->contains($ligne)) {
+            $this->lignes->add($ligne);
+            $ligne->setDevis($this);
         }
-
         return $this;
     }
 
-    public function removeDevi(LigneDevis $devi): static
+    public function removeLigne(LigneDevis $ligne): static
     {
-        if ($this->devis->removeElement($devi)) {
-            // set the owning side to null (unless already changed)
-            if ($devi->getDevis() === $this) {
-                $devi->setDevis(null);
+        if ($this->lignes->removeElement($ligne)) {
+            if ($ligne->getDevis() === $this) {
+                $ligne->setDevis(null);
             }
         }
-
         return $this;
     }
 }

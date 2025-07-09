@@ -1,43 +1,64 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Facture index{% endblock %}
+{% block title %}Liste des factures{% endblock %}
 
 {% block body %}
-    <h1>Facture index</h1>
+    <h1>Liste des factures</h1>
+
+    {% if app.user %}
+        <p>Connecté en tant que : <strong>{{ app.user.userIdentifier }}</strong></p>
+        {% if 'ROLE_ADMIN' in app.user.roles %}
+            <p><em>Vous êtes administrateur et voyez toutes les factures.</em></p>
+        {% else %}
+            <p><em>Vous voyez uniquement vos factures.</em></p>
+        {% endif %}
+    {% endif %}
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Numero</th>
-                <th>Dateemission</th>
-                <th>Client</th>
-                <th>TotalTTC</th>
+                <th>Numéro</th>
+                <th>Nom du client</th>
+                <th>Email du client</th>
+                <th>Date d’émission</th>
+                <th>Total TTC</th>
                 <th>Statut</th>
-                <th>actions</th>
+                <th>Lignes</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for facture in factures %}
-            <tr>
-                <td>{{ facture.id }}</td>
-                <td>{{ facture.numero }}</td>
-                <td>{{ facture.dateemission ? facture.dateemission|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ facture.client }}</td>
-                <td>{{ facture.totalTTC }}</td>
-                <td>{{ facture.statut }}</td>
-                <td>
-                    <a href="{{ path('app_facture_show', {'id': facture.id}) }}">show</a>
-                    <a href="{{ path('app_facture_edit', {'id': facture.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
+            {% for facture in factures %}
+                <tr>
+                    <td>{{ facture.id }}</td>
+                    <td>{{ facture.numero }}</td>
+                    <td>{{ facture.client ? facture.client.nom : 'N/A' }}</td>
+                    <td>{{ facture.client ? facture.client.email : 'N/A' }}</td>
+                    <td>{{ facture.dateEmission ? facture.dateEmission|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ facture.totalTTC }} €</td>
+                    <td>{{ facture.statut }}</td>
+                    <td>
+                        <ul>
+                            {% for ligne in facture.lignes %}
+                                <li>{{ ligne.description }} — Qté: {{ ligne.quantite }} — PU: {{ ligne.prixUnitaire }} € — Montant: {{ ligne.montant }} €</li>
+                            {% else %}
+                                <li>Aucune ligne</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <a href="{{ path('app_facture_show', {'id': facture.id}) }}">Voir</a>
+                        <a href="{{ path('app_facture_edit', {'id': facture.id}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="9">Aucune facture trouvée.</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_facture_new') }}">Create new</a>
+    <a href="{{ path('app_facture_new') }}" class="btn btn-primary">Créer une nouvelle facture</a>
 {% endblock %}
