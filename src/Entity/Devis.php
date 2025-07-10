@@ -6,6 +6,7 @@ use App\Repository\DevisRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\User; // <-- Ajouté, adapte le namespace si besoin
 
 #[ORM\Entity(repositoryClass: DevisRepository::class)]
 class Devis
@@ -32,6 +33,11 @@ class Devis
      */
     #[ORM\OneToMany(targetEntity: LigneDevis::class, mappedBy: 'devis', cascade:["persist", "remove"], orphanRemoval: true)]
     private Collection $lignes;
+
+    
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]  // nullable=true si user facultatif, sinon mettre false
+    private ?User $user = null;
 
     public function __construct()
     {
@@ -112,6 +118,18 @@ class Devis
                 $ligne->setDevis(null);
             }
         }
+        return $this;
+    }
+
+    // ** Getter et setter pour user **
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
         return $this;
     }
 }

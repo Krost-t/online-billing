@@ -23,7 +23,7 @@ security:
                 password_parameter: _password
                 enable_csrf: true
                 csrf_token_id: authenticate
-                default_target_path: /admin
+                default_target_path: /devis
             logout:
                 path: app_logout
                 target: /login
@@ -31,5 +31,6 @@ security:
     access_control:
         - { path: ^/superadmin, roles: ROLE_SUPER_ADMIN }
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/devis, roles: ROLE_USER }
         - { path: ^/login, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+        
