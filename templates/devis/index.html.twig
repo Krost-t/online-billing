@@ -34,8 +34,13 @@
                     <td>{{ devi.createdAt ? devi.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                     <td>{{ devi.statut }}</td>
                     <td>
-                        <a href="{{ path('app_devis_show', {id: devi.id}) }}">Voir</a>
-                        <a href="{{ path('app_devis_edit', {id: devi.id}) }}">Modifier</a>
+                        <a href="{{ path('app_devis_show', {id: devi.id}) }}">Voir</a> |
+                        <a href="{{ path('app_devis_edit', {id: devi.id}) }}">Modifier</a> |
+                        <a href="{{ path('app_devis_to_facture', {id: devi.id}) }}"
+                           class="btn btn-sm btn-success"
+                           onclick="return confirm('Confirmer la transformation de ce devis en facture ?');">
+                            Transformer en facture
+                        </a>
                     </td>
                 </tr>
             {% else %}
