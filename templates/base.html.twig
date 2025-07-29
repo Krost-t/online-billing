@@ -38,7 +38,7 @@
 					<a href="#">Devis</a>
 				</li>
 				<li>
-					<a href="{{ path('app_facture') }}">Factures</a>
+					<a href="{{ path('app_facture_index') }}">Factures</a>
 				</li>
 				<li>
 					<a href="#">Facture d'achat</a>
@@ -60,42 +60,54 @@
 			</div>
 			<ul class="menu-aside">
 				<li data-path="/home">
-					<span>
-						<i class="bi bi-house"></i>
-						Accueil</span>
-					<i class="bi bi-caret-right-fill"></i>
+					<a href="{{ path('app_home') }}">
+						<span>
+							<i class="bi bi-house"></i>
+							Accueil</span>
+						<i class="bi bi-caret-right-fill"></i>
+					</a>
 				</li>
-				<li data-path="/client">
-					<span>
-						<i class="bi bi-person-vcard-fill"></i>
-						Client</span>
-					<i class="bi bi-caret-right-fill"></i>
+				<li>
+					<a href="{{ path('app_client_index') }}">
+						<span>
+							<i class="bi bi-person-vcard-fill"></i>
+							Client</span>
+						<i class="bi bi-caret-right-fill"></i>
+					</a>
 				</li>
-				<li data-path="/devis">
-					<span>
-						<i class="bi bi-card-list"></i>
-						Devis</span>
-					<i class="bi bi-caret-right-fill"></i>
+				<li>
+					<a href="{{ path('app_devis_index') }}">
+						<span>
+							<i class="bi bi-card-list"></i>
+							Devis</span>
+						<i class="bi bi-caret-right-fill"></i>
+					</a>
 				</li>
-				<li data-path="/factures">
-					<span>
-						<i class="bi bi-journal-text"></i>Factures</span>
-					<i class="bi bi-caret-right-fill"></i>
+				<li>
+					<a href="{{ path('app_facture_index') }}">
+						<span>
+							<i class="bi bi-journal-text"></i>Factures</span>
+						<i class="bi bi-caret-right-fill"></i>
+					</a>
 				</li>
-				<li data-path="/facture/achat">
-					<span>
-						<i class="bi bi-credit-card-2-back"></i>
-						Facture d'achat</span>
-					<i class="bi bi-caret-right-fill"></i>
+				<li>
+					<a href="{{ path('app_facture_achat_index') }}">
+						<span>
+							<i class="bi bi-credit-card-2-back"></i>
+							Facture d'achat</span>
+						<i class="bi bi-caret-right-fill"></i>
+					</a>
 				</li>
-				<li data-path="app_bilan">
-					<span>
-						<i class="bi bi-bar-chart-line"></i>
-						Bilan</span>
-					<i class="bi bi-caret-right-fill"></i>
+				<li>
+					<a href="# {# {{ path('app_bilan_index') }} #}">
+						<span>
+							<i class="bi bi-bar-chart-line"></i>
+							Bilan</span>
+						<i class="bi bi-caret-right-fill"></i>
+					</a>
 				</li>
 				<div class="bas-page">
-					<li data-path="app_settings">
+					<li>
 						<span>
 							<i class="bi bi-gear"></i>
 							Paramètres</span>

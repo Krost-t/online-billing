@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FactureAchat index{% endblock %}
+
+{% block body %}
+    <h1>FactureAchat index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Pdf_path</th>
+                <th>Date</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for facture_achat in facture_achats %}
+            <tr>
+                <td>{{ facture_achat.id }}</td>
+                <td>{{ facture_achat.pdfPath }}</td>
+                <td>{{ facture_achat.date ? facture_achat.date|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_facture_achat_show', {'id': facture_achat.id}) }}">show</a>
+                    <a href="{{ path('app_facture_achat_edit', {'id': facture_achat.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_facture_achat_new') }}">Create new</a>
+{% endblock %}
