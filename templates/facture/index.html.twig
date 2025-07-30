@@ -10,7 +10,7 @@
             <tr>
                 <th>Id</th>
                 <th>Created_at</th>
-                <th>StatutPayement</th>
+                <th>etat</th>
                 <th>Total_ht</th>
                 <th>Total_tva</th>
                 <th>Total_ttc</th>
@@ -22,7 +22,7 @@
             <tr>
                 <td>{{ facture.id }}</td>
                 <td>{{ facture.createdAt ? facture.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ facture.statutPayement.label() }}</td>
+                <td>{{ facture.etat.value }}</td>
                 <td>{{ facture.totalHt }}</td>
                 <td>{{ facture.totalTva }}</td>
                 <td>{{ facture.totalTtc }}</td>

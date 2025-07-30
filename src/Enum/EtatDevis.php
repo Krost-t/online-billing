@@ -44,4 +44,5 @@ enum EtatDevis: string
             default => throw new \ValueError("Valeur invalide pour EtatDevis : $value")
         };
     }
+
 }

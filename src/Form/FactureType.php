@@ -10,6 +10,9 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
+use App\Enum\EtatFacture;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class FactureType extends AbstractType
 {
@@ -17,10 +20,14 @@ class FactureType extends AbstractType
     {
         $builder
             ->add('id')
-            ->add('created_at', null, [
+            ->add('createdAt', DateTimeType::class, [
                 'widget' => 'single_text',
             ])
-            ->add('statutPayement')
+            // on bind direct à l’enum, plus propre
+            ->add('statutPayement', EnumType::class, [
+                'class' => EtatFacture::class,
+                'choice_label' => fn(EtatFacture $e) => $e->label(),
+            ])
             ->add('total_ht')
             ->add('total_tva')
             ->add('total_ttc')

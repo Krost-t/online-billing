@@ -17,7 +17,7 @@
             </tr>
             <tr>
                 <th>StatutPayement</th>
-                <td>{{ facture.statutPayement.label() }}</td>
+                <td>{{ facture.statutPayement.value }}</td>
             </tr>
             <tr>
                 <th>Total_ht</th>
@@ -33,6 +33,7 @@
             </tr>
         </tbody>
     </table>
+  
 
     <a href="{{ path('app_facture_index') }}">back to list</a>
 
