@@ -10,27 +10,27 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use App\Enum\EtatFacture;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class FactureType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
         $builder
             ->add('id')
-            ->add('createdAt', DateTimeType::class, [
+            ->add('created_at', null, [
                 'widget' => 'single_text',
             ])
-            // on bind direct à l’enum, plus propre
-            ->add('statutPayement', EnumType::class, [
-                'class' => EtatFacture::class,
-                'choice_label' => fn(EtatFacture $e) => $e->label(),
+            ->add('statutPayement', ChoiceType::class, [
+                'choices' => EtatFacture::cases(),
+                'choice_label' => function (EtatFacture $case) {
+                    return $case->label();
+                },
+                'choice_value' => function (?EtatFacture $case) {
+                    return $case?->value;
+                },
             ])
-            ->add('total_ht')
-            ->add('total_tva')
-            ->add('total_ttc')
             ->add('client', EntityType::class, [
                 'class' => Client::class,
                 'choice_label' => 'id',

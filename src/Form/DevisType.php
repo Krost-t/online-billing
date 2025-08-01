@@ -10,6 +10,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Enum\EtatDevis;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class DevisType extends AbstractType
 {
@@ -18,13 +20,18 @@ class DevisType extends AbstractType
         $builder
             ->add('id')
             ->add('contions')
-            ->add('etat')
+            ->add('etat', ChoiceType::class, [
+                'choices' => EtatDevis::cases(),
+                'choice_label' => function (EtatDevis $case) {
+                    return $case->label();
+                },
+                'choice_value' => function (?EtatDevis $case) {
+                    return $case?->value;
+                },
+            ])
             ->add('created_at', null, [
                 'widget' => 'single_text',
             ])
-            ->add('total_ht')
-            ->add('total_tva')
-            ->add('total_ttc')
             ->add('client', EntityType::class, [
                 'class' => Client::class,
                 'choice_label' => 'id',

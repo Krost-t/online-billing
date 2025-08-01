@@ -10,205 +10,144 @@ use App\Entity\FactureAchat;
 use App\Entity\LigneDevis;
 use App\Entity\LigneFacture;
 use App\Entity\User;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
-use Faker\Factory as FakerFactory;
 use App\Enum\EtatDevis;
 use App\Enum\EtatFacture;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 
 class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $faker = FakerFactory::create('fr_FR');
+        $faker = Factory::create('fr_FR');
+        $roles = [
+            ['ROLE_SUPER_ADMIN'],
+            ['ROLE_ADMIN'],
+            ['ROLE_ADMIN'],
+            ['ROLE_ADMIN'],
+            ['ROLE_ADMIN'],
+        ];
 
-        // 1. USERS (Super Admin, Admins, Users)
         $users = [];
-
-        // 1.a Super Admin
-        $superAdmin = new User();
-        $superAdmin->setEmail('superadmin@example.com')
-            ->setPassword(password_hash('password', PASSWORD_BCRYPT))
-            ->setPrenom('Super')
-            ->setNom('Admin')
-            ->setRoles(['ROLE_SUPER_ADMIN'])
-            ->setIsVerified(true)
-            ->setCreatedAt(new \DateTimeImmutable())
-            ->setUpdatedAt(new \DateTime());
-        $manager->persist($superAdmin);
-        $users[] = $superAdmin;
-
-        // 1.b Admins
-        for ($i = 0; $i < 6; $i++) {
-            $admin = new User();
-            $created = \DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-1 years'));
-            $updated = $faker->dateTime();
-
-            $admin->setEmail("admin{$i}@example.com")
-                ->setPassword(password_hash('password', PASSWORD_BCRYPT))
-                ->setPrenom($faker->firstName)
-                ->setNom($faker->lastName)
-                ->setRoles(['ROLE_ADMIN'])
-                ->setIsVerified(true)
-                ->setCreatedAt($created)
-                ->setUpdatedAt($updated);
-
-            $manager->persist($admin);
-            $users[] = $admin;
-        }
-
-        // 1.c Simple Users
-        for ($i = 0; $i < 3; $i++) {
+        // Création des utilisateurs
+        foreach ($roles as $i => $role) {
             $user = new User();
-            $created = \DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-6 months'));
-            $updated = $faker->dateTime();
-
-            $user->setEmail("user{$i}@example.com")
-                ->setPassword(password_hash('password', PASSWORD_BCRYPT))
-                ->setPrenom($faker->firstName)
-                ->setNom($faker->lastName)
-                ->setRoles(['ROLE_USER'])
-                ->setIsVerified(true)
-                ->setCreatedAt($created)
-                ->setUpdatedAt($updated);
-
+            $user->setEmail(sprintf('%s@example.com', $i === 0 ? 'superadmin' : 'admin' . $i));
+            $user->setRoles($role);
+            $user->setPassword(password_hash('password', PASSWORD_BCRYPT));
+            $user->setNom($faker->lastName());
+            $user->setPrenom($faker->firstName());
             $manager->persist($user);
             $users[] = $user;
         }
 
-        // 2. ADDRESSES
-        $addresses = [];
+        // Pour chaque utilisateur
         foreach ($users as $user) {
-            for ($j = 0; $j < 2; $j++) {
-                $adresse = new Adresse();
-                $adresse->setNumeroLogement((int)$faker->buildingNumber)
-                    ->setNomRue($faker->streetName)
-                    ->setCodePostal((int)$faker->postcode)
-                    ->setBatiment($faker->boolean(30) ? strtoupper($faker->randomLetter) : null)
-                    ->setUser($user);
-                $manager->persist($adresse);
-                $addresses[] = $adresse;
+            // Création de FactureAchat sample (5 par user)
+            for ($k = 0; $k < 5; $k++) {
+                $achat = new FactureAchat();
+                $achat->setUserFactureAchat($user)
+                      ->setDatePaiement($faker->dateTimeBetween('-1 years', 'now'))
+                      ->setPdfPath(null);
+                $manager->persist($achat);
             }
-        }
 
-        // 3. CLIENTS
-        $clients = [];
-        foreach ($users as $user) {
-            if (!in_array('ROLE_ADMIN', $user->getRoles())) continue;
-
-            for ($i = 0; $i < 4; $i++) {
-                $client = new Client();
-                $created = \DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-6 months'));
-                $updated = $faker->dateTime();
-
-                $client->setNom($faker->company)
-                    ->setPrenom($faker->firstName)
-                    ->setMail($faker->companyEmail)
-                    ->setTelephone($faker->phoneNumber)
-                    ->setSiret($faker->boolean(50) ? $faker->vat : null)
-                    ->setCreatedAt($created)
-                    ->setUpdatedAt($updated)
-                    ->setAdresseClient($faker->randomElement($addresses))
-                    ->setUserClient($user);
-
-                $manager->persist($client);
-                $clients[] = $client;
-            }
-        }
-
-        // 4. DEVIS & LIGNES
-        $devisList = [];
-        foreach ($clients as $client) {
+            // Création de devis et factures
             for ($i = 0; $i < 10; $i++) {
+                // Adresse et client associés
+                $adresse = new Adresse();
+                $adresse->setNomRue($faker->streetName())
+                        ->setNumeroLogement($faker->buildingNumber())
+                        ->setCodePostal((int)$faker->postcode())
+                        ->setBatiment($faker->randomElement([null, 'A', 'B', 'C']))
+                        ->setUser($user);
+                $manager->persist($adresse);
+
+                $client = new Client();
+                $client->setNom($faker->lastName())
+                       ->setPrenom($faker->firstName())
+                       ->setMail($faker->email())
+                       ->setTelephone($faker->phoneNumber())
+                       ->setSiret($faker->boolean(50) ? $faker->numerify('#############') : null)
+                       ->setCreatedAt(new \DateTimeImmutable())
+                       ->setUpdatedAt(new \DateTime())
+                       ->setAdresseClient($adresse)
+                       ->setUserClient($user);
+                $manager->persist($client);
+
+                // Devis
                 $devis = new Devis();
-                $devis->setContions('Valid 30 days')
-                    ->setEtat($faker->randomElement(EtatDevis::cases()))
-                    ->setClient($client)
-                    ->setUserDevis($client->getUserClient());
-
-                $totalHt = 0;
-                $nbLignes = rand(3, 5);
-                for ($j = 0; $j < $nbLignes; $j++) {
-                    $qty = $faker->numberBetween(1, 10);
-                    $unit = $faker->randomFloat(2, 20, 500);
-                    $lineHt = round($qty * $unit, 2);
-                    $tvaRate = 20.0;
-                    $lineTtc = round($lineHt * (1 + $tvaRate/100), 2);
-
-                    $ligne = new LigneDevis();
-                    $ligne->setNameProduit($faker->word)
-                        ->setDescription($faker->sentence)
-                        ->setQuantite($qty)
-                        ->setPrixUnitaireHt($unit)
-                        ->setTva($tvaRate)
-                        ->setTotalHt($lineHt)
-                        ->setTotalTtc($lineTtc)
-                        ->setDevis($devis);
-
-                    $manager->persist($ligne);
-                    $totalHt += $lineHt;
-                }
-
-                $tva = round($totalHt * 0.2, 2);
-                $devis->setTotalHt($totalHt)
-                    ->setTotalTva($tva)
-                    ->setTotalTtc(round($totalHt + $tva, 2));
-
+                $devis->setClient($client)
+                      ->setUserDevis($user)
+                      ->setContions($faker->sentence())
+                      ->setEtat(EtatDevis::EN_ATTENTE);
                 $manager->persist($devis);
-                $devisList[] = $devis;
-            }
-        }
 
-        // 5. FACTURES & LIGNES
-        foreach ($devisList as $devis) {
-            if ($faker->boolean(70) && null === $devis->getFacture()) {
-                $facture = new Facture();
-                $facture->setClient($devis->getClient())
-                    ->setUserFacture($devis->getUserDevis())
-                    ->setDevisToFacture($devis)
-                    ->setStatutPayement($faker->randomElement(EtatFacture::cases()));
-
-                $totalHt = 0;
-                foreach ($devis->getLigneDevis() as $dLine) {
-                    $tvaRate = $dLine->getTva();
-                    $lineHt  = $dLine->getTotalHt();
-                    $lineTtc = round($lineHt * (1 + $tvaRate/100), 2);
-
-                    $fLine = new LigneFacture();
-                    $fLine->setNameProduit($dLine->getNameProduit())
-                        ->setDescription($dLine->getDescription())
-                        ->setQuantite($dLine->getQuantite())
-                        ->setPrixUnitaireHt($dLine->getPrixUnitaireHt())
-                        ->setTva($tvaRate)
-                        ->setTotalHt($lineHt)
-                        ->setTotalTtc($lineTtc)
-                        ->setFacture($facture);
-
-                    $manager->persist($fLine);
-                    $totalHt += $lineHt;
+                // Lignes Devis
+                $nbLignes = $faker->numberBetween(1, 5);
+                for ($j = 0; $j < $nbLignes; $j++) {
+                    $ld = new LigneDevis();
+                    $ld->setNameProduit($faker->word())
+                       ->setDescription($faker->sentence())
+                       ->setQuantite($faker->numberBetween(1, 10))
+                       ->setPrixUnitaireHt($faker->randomFloat(2, 10, 500))
+                       ->setTva($faker->randomElement([0.2, 0.1, 0.055]))
+                       ->setDevis($devis);
+                    $manager->persist($ld);
                 }
 
-                $tva = round($totalHt * 0.2, 2);
-                $facture->setTotalHt($totalHt)
-                    ->setTotalTva($tva)
-                    ->setTotalTtc(round($totalHt + $tva, 2));
+                // Facture issue du Devis (50% chance)
+                if ($faker->boolean(50)) {
+                    $devis->setEtat(EtatDevis::ACCEPTE);
+                    $factureLinked = new Facture();
+                    $factureLinked->setClient($client)
+                                  ->setUserFacture($user)
+                                  ->setDevisToFacture($devis)
+                                  ->setStatutPayement($faker->randomElement([
+                                      EtatFacture::NON_PAYEE,
+                                      EtatFacture::PARTIELLEMENT_PAYEE,
+                                      EtatFacture::PAYEE
+                                  ]));
+                    $manager->persist($factureLinked);
 
+                    foreach ($devis->getLigneDevis() as $ligneDevis) {
+                        $lf = new LigneFacture();
+                        $lf->setNameProduit($ligneDevis->getNameProduit())
+                           ->setDescription($ligneDevis->getDescription())
+                           ->setQuantite($ligneDevis->getQuantite())
+                           ->setPrixUnitaireHt($ligneDevis->getPrixUnitaireHt())
+                           ->setTva($ligneDevis->getTva())
+                           ->setFacture($factureLinked);
+                        $manager->persist($lf);
+                    }
+                }
+
+                // Facture indépendante
+                $facture = new Facture();
+                $facture->setClient($client)
+                        ->setUserFacture($user)
+                        ->setStatutPayement($faker->randomElement([
+                            EtatFacture::NON_PAYEE,
+                            EtatFacture::PARTIELLEMENT_PAYEE,
+                            EtatFacture::PAYEE
+                        ]));
                 $manager->persist($facture);
+
+                $nbLignesF = $faker->numberBetween(1, 5);
+                for ($j = 0; $j < $nbLignesF; $j++) {
+                    $lf = new LigneFacture();
+                    $lf->setNameProduit($faker->word())
+                       ->setDescription($faker->sentence())
+                       ->setQuantite($faker->numberBetween(1, 10))
+                       ->setPrixUnitaireHt($faker->randomFloat(2, 10, 500))
+                       ->setTva($faker->randomElement([0.2, 0.1, 0.055]))
+                       ->setFacture($facture);
+                    $manager->persist($lf);
+                }
             }
         }
-
-        // 6. FACTURES D'ACHAT FACTURES D'ACHAT FACTURES D'ACHAT
-        foreach ($users as $user) {
-            for ($i = 0; $i < 5; $i++) {
-                $fa = new FactureAchat();
-                $fa->setPdfPath('facture_achat_' . $faker->uuid() . '.pdf')
-                    ->setDatePaiement($faker->optional()->dateTimeThisYear)
-                    ->setUserFactureAchat($user);
-
-                $manager->persist($fa);
-            }
-        }
-
+        
         $manager->flush();
     }
 }

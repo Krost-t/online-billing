@@ -14,12 +14,6 @@ class LigneFacture
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
-    private ?float $total_ttc = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?float $total_ht = null;
-
-    #[ORM\Column(nullable: true)]
     private ?float $tva = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -42,30 +36,6 @@ class LigneFacture
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTotalTtc(): ?float
-    {
-        return $this->total_ttc;
-    }
-
-    public function setTotalTtc(?float $total_ttc): static
-    {
-        $this->total_ttc = $total_ttc;
-
-        return $this;
-    }
-
-    public function getTotalHt(): ?float
-    {
-        return $this->total_ht;
-    }
-
-    public function setTotalHt(?float $total_ht): static
-    {
-        $this->total_ht = $total_ht;
-
-        return $this;
     }
 
     public function getTva(): ?float

@@ -19,7 +19,7 @@ class Facture
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
-    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'facturesClient',   cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'facturesClient', cascade: ['persist'])]
     private ?Client $client = null;
 
     /**
@@ -37,16 +37,7 @@ class Facture
     #[ORM\Column(enumType: EtatFacture::class)]
     private ?EtatFacture $statutPayement = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $total_ht = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $total_tva = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?float $total_ttc = null;
-
-    
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -149,41 +140,41 @@ class Facture
         return $this;
     }
 
-    public function getTotalHt(): ?float
+
+    public function getTTC(): float
     {
-        return $this->total_ht;
+        $totalTTC = 0;
+
+        foreach ($this->ligneFactures as $ligne) {
+            $quantite = $ligne->getQuantite();
+            $prixUnitaireHT = $ligne->getPrixUnitaireHT();
+
+            $tauxTVA = 1 / $ligne->getTva();
+
+            $totalTTC += $quantite * $prixUnitaireHT * (1 + $tauxTVA);
+        }
+
+        return round($totalTTC, 2);
+
     }
 
-    public function setTotalHt(?float $total_ht): static
+    public function getHT(): float
     {
-        $this->total_ht = $total_ht;
+        $totalHT = 0;
 
-        return $this;
+        foreach ($this->ligneFactures as $ligne) {
+            $quantite = $ligne->getQuantite();
+            $prixUnitaireHT = $ligne->getPrixUnitaireHT();
+
+            $totalHT += $quantite * $prixUnitaireHT;
+        }
+
+        return round($totalHT, 2);
     }
 
-    public function getTotalTva(): ?float
-    {
-        return $this->total_tva;
-    }
-
-    public function setTotalTva(?float $total_tva): static
-    {
-        $this->total_tva = $total_tva;
-
-        return $this;
-    }
-
-    public function getTotalTtc(): ?float
-    {
-        return $this->total_ttc;
-    }
-
-    public function setTotalTtc(?float $total_ttc): static
-    {
-        $this->total_ttc = $total_ttc;
-
-        return $this;
-    }
-
+public function getTotalTVA(): float
+{
+    return round($this->getTTC() - $this->getHT(), 2);
+}
 
 }

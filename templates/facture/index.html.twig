@@ -4,16 +4,13 @@
 
 {% block body %}
     <h1>Facture index</h1>
-
+    <a href="{{ path('app_facture_new') }}">new</a>
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Created_at</th>
-                <th>etat</th>
-                <th>Total_ht</th>
-                <th>Total_tva</th>
-                <th>Total_ttc</th>
+                <th>StatutPayement</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -22,10 +19,7 @@
             <tr>
                 <td>{{ facture.id }}</td>
                 <td>{{ facture.createdAt ? facture.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ facture.etat.value }}</td>
-                <td>{{ facture.totalHt }}</td>
-                <td>{{ facture.totalTva }}</td>
-                <td>{{ facture.totalTtc }}</td>
+                <td>{{ facture.statutPayement.value }}</td>
                 <td>
                     <a href="{{ path('app_facture_show', {'id': facture.id}) }}">show</a>
                     <a href="{{ path('app_facture_edit', {'id': facture.id}) }}">edit</a>
@@ -33,7 +27,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td colspan="4">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

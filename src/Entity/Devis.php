@@ -25,19 +25,12 @@ class Devis
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $total_ht = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $total_tva = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $total_ttc = null;
-
-    #[ORM\ManyToOne( targetEntity: Client::class,inversedBy: 'devisClient', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'devisClient', cascade: ['persist'])]
     private ?Client $client = null;
 
-    #[ORM\OneToOne(mappedBy: 'devisToFacture', targetEntity: Facture::class,cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'devisToFacture', targetEntity: Facture::class, cascade: ['persist', 'remove'])]
     private ?Facture $facture = null;
 
     /**
@@ -46,7 +39,7 @@ class Devis
     #[ORM\OneToMany(targetEntity: LigneDevis::class, mappedBy: 'devis')]
     private Collection $ligneDevis;
 
-    #[ORM\ManyToOne( targetEntity: User::class, inversedBy: 'devis', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'devis', cascade: ['persist'])]
     private ?User $userDevis = null;
 
 
@@ -92,35 +85,6 @@ class Devis
         return $this;
     }
 
-    public function getTotalHt(): ?float
-    {
-        return $this->total_ht;
-    }
-    public function setTotalHt(?float $total_ht): static
-    {
-        $this->total_ht = $total_ht;
-        return $this;
-    }
-
-    public function getTotalTva(): ?float
-    {
-        return $this->total_tva;
-    }
-    public function setTotalTva(?float $total_tva): static
-    {
-        $this->total_tva = $total_tva;
-        return $this;
-    }
-
-    public function getTotalTtc(): ?float
-    {
-        return $this->total_ttc;
-    }
-    public function setTotalTtc(?float $total_ttc): static
-    {
-        $this->total_ttc = $total_ttc;
-        return $this;
-    }
 
     public function setFacture(?Facture $facture): static
     {
@@ -166,7 +130,6 @@ class Devis
     public function removeLigneDevi(LigneDevis $ligneDevi): static
     {
         if ($this->ligneDevis->removeElement($ligneDevi)) {
-            // set the owning side to null (unless already changed)
             if ($ligneDevi->getDevis() === $this) {
                 $ligneDevi->setDevis(null);
             }
@@ -186,5 +149,39 @@ class Devis
 
         return $this;
     }
+
+    public function getTotalHT(): float
+    {
+        $totalHT = 0;
+
+        foreach ($this->getLigneDevis() as $ligne) {
+            $quantite = $ligne->getQuantite();
+            $prixUnitaireHT = $ligne->getPrixUnitaireHT();
+            $totalHT += $quantite * $prixUnitaireHT;
+        }
+
+        return round($totalHT, 2);
+    }
+    public function getTotalTTC(): float
+    {
+        $totalTTC = 0;
+
+        foreach ($this->getLigneDevis() as $ligne) {
+            $quantite = $ligne->getQuantite();
+            $prixUnitaireHT = $ligne->getPrixUnitaireHT();
+            $tauxTVA = 1 / $ligne->getTva(); 
+
+            $totalTTC += $quantite * $prixUnitaireHT * (1 + $tauxTVA);
+        }
+
+        return round($totalTTC, 2);
+    }
+
+    public function getTotalTVA(): float
+    {
+        return round($this->getTotalTTC() - $this->getTotalHT(), 2);
+    }
+
+
 
 }

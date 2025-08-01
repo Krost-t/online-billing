@@ -1,43 +1,48 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Facture{% endblock %}
+{% block title %}Facture
+{% endblock %}
 
 {% block body %}
-    <h1>Facture</h1>
+	<h1>Facture</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ facture.id }}</td>
-            </tr>
-            <tr>
-                <th>Created_at</th>
-                <td>{{ facture.createdAt ? facture.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>StatutPayement</th>
-                <td>{{ facture.statutPayement.value }}</td>
-            </tr>
-            <tr>
-                <th>Total_ht</th>
-                <td>{{ facture.totalHt }}</td>
-            </tr>
-            <tr>
-                <th>Total_tva</th>
-                <td>{{ facture.totalTva }}</td>
-            </tr>
-            <tr>
-                <th>Total_ttc</th>
-                <td>{{ facture.totalTtc }}</td>
-            </tr>
-        </tbody>
-    </table>
-  
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>Id</th>
+				<td>{{ facture.id }}</td>
+			</tr>
+			<tr>
+				<th>Created_at</th>
+				<td>{{ facture.createdAt ? facture.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+			</tr>
+			<tr>
+				<th>Client</th>
+				<td>{{ facture.client ? facture.client.nom : 'N/A' }}</td>
+			</tr>
+			<tr>
+				<th>StatutPayement</th>
+				<td>{{ facture.statutPayement.value }}</td>
+			</tr>
+			<tr>
+				<th>Montant HT</th>
+				<td>{{ facture.getHT() != 0 ? facture.getHT() : facture.getDevisToFacture().getTotalHT() }}</td>
+			</tr>
+			<tr>
+				<th>Montant TVA</th>
+				<td>{{ facture.getTotalTVA() != 0 ? facture.getTotalTVA() : facture.getDevisToFacture().getTotalTVA()}}</td>
+			</tr>
+			<tr>
+				<th>Montant TTC</th>
+				<td>{{ facture.getTTC()!= 0 ? facture.getTTC() : facture.getDevisToFacture().getTotalTTC()}}</td>
+			</tr>
 
-    <a href="{{ path('app_facture_index') }}">back to list</a>
+		</tbody>
+	</table>
 
-    <a href="{{ path('app_facture_edit', {'id': facture.id}) }}">edit</a>
+	<a href="{{ path('app_facture_index') }}">back to list</a>
 
-    {{ include('facture/_delete_form.html.twig') }}
+	<a href="{{ path('app_facture_edit', {'id': facture.id}) }}">edit</a>
+
+	{{ include('facture/_delete_form.html.twig') }}
 {% endblock %}

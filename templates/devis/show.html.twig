@@ -24,42 +24,28 @@
                 <td>{{ devi.createdAt ? devi.createdAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>Total_ht</th>
-                <td>{{ devi.totalHt }}</td>
-            </tr>
-            <tr>
-                <th>Total_tva</th>
-                <td>{{ devi.totalTva }}</td>
-            </tr>
-            <tr>
-                <th>Total_ttc</th>
-                <td>{{ devi.totalTtc }}</td>
-            </tr>
+				<th>Client</th>
+				<td>{{ devi.client ? devi.client.nom : 'N/A' }}</td>
+			</tr>
+			<tr>
+				<th>Statut Devis</th>
+				<td>{{ devi.etat.value }}</td>
+			</tr>
+			<tr>
+				<th>Montant HT</th>
+				<td>{{ devi.getTotalHT()}}</td>
+			</tr>
+			<tr>
+				<th>Montant TVA</th>
+				<td>{{ devi.getTotalTVA()}}</td>
+			</tr>
+			<tr>
+				<th>Montant TTC</th>
+				<td>{{ devi.getTotalTTC()}}</td>
+			</tr>
         </tbody>
     </table>
 
-    {% for item in devi.ligneDevis %}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Nom produit</th>
-                    <th>Descritpion</th>
-                    <th>Quantité</th>
-                    <th>Prix Unitaire</th>
-                    <th>Total HT</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ item.nameProduit}}</td>
-                    <td>{{ item.description }}</td>
-                    <td>{{ item.quantite }}</td>
-                    <td>{{ item.prixUnitaireHt  }}</td>
-                    <td>{{ item.totalHt }}</td>
-                </tr>
-            </tbody>
-        </table>
-    {% endfor %}
     <a href="{{ path('app_devis_index') }}">back to list</a>
 
     <a href="{{ path('app_devis_edit', {'id': devi.id}) }}">edit</a>

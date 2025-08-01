@@ -12,9 +12,6 @@
                 <th>Contions</th>
                 <th>Etat</th>
                 <th>Created_at</th>
-                <th>Total_ht</th>
-                <th>Total_tva</th>
-                <th>Total_ttc</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -25,9 +22,6 @@
                 <td>{{ devi.contions }}</td>
                 <td>{{ devi.etat.value }}</td>
                 <td>{{ devi.createdAt ? devi.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ devi.totalHt }}</td>
-                <td>{{ devi.totalTva }}</td>
-                <td>{{ devi.totalTtc }}</td>
                 <td>
                     <a href="{{ path('app_devis_show', {'id': devi.id}) }}">show</a>
                     <a href="{{ path('app_devis_edit', {'id': devi.id}) }}">edit</a>
@@ -35,7 +29,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="8">no records found</td>
+                <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
